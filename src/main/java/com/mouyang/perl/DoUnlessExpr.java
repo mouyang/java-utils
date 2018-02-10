@@ -54,9 +54,9 @@ public class DoUnlessExpr {
 	}
 
 	public void unless(BooleanSupplier... booleanSuppliers) {
-		String s = "";
-		if (0 == booleanSuppliers.length) {
+		if (null == booleanSuppliers || 0 == booleanSuppliers.length) {
 			runnable.run();
+			return;
 		}
 		for (BooleanSupplier booleanSupplier : booleanSuppliers) {
 			if (booleanSupplier.getAsBoolean()) {
