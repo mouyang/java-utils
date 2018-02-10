@@ -1,4 +1,4 @@
-package com.mouyang.perl;
+package com.mouyang.util.perl;
 /**
  * Port useful structures from Perl to Java.
  */
