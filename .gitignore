@@ -3,5 +3,8 @@
 .project
 .settings
 
+# eclipse defaults. custom settings should be placed in .git/info/exclude
+test-output
+
 # maven
 target
