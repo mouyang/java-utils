@@ -1,6 +1,7 @@
 package com.mouyang.util.function;
 
 import static com.mouyang.util.function.PredicateFactory.allOf;
+import static com.mouyang.util.function.PredicateFactory.anyOf;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertFalse;
 
@@ -92,6 +93,91 @@ public class PredicateFactoryTest {
 		assertFalse(predicate.test(-1));
 		assertFalse(predicate.test(10));
 		assertFalse(predicate.test(30));
+		assertFalse(predicate.test(20));
+	}
+
+	// warning suppression is justified because the predicate should always return true regardless of type
+	@Test @SuppressWarnings({"rawtypes", "unchecked"})
+	public void anyOf_null() {
+		Predicate predicate = anyOf((Predicate)null);
+		assertTrue(predicate.test(null));
+		assertTrue(predicate.test(1));
+	}
+
+	// warning suppression is justified because the predicate should always return true regardless of type
+	@Test @SuppressWarnings({"rawtypes", "unchecked"})
+	public void anyOf_none() {
+		Predicate predicate = anyOf();
+		assertTrue(predicate.test(null));
+		assertTrue(predicate.test(1));
+	}
+
+	// warning suppression is justified because the predicate should always return true regardless of type
+	@Test @SuppressWarnings({"rawtypes", "unchecked"})
+	public void anyOf_multipleNulls() {
+		Predicate predicate = anyOf(null, null, null);
+		assertTrue(predicate.test(null));
+		assertTrue(predicate.test(1));
+	}
+
+	@Test
+	public void anyOf_single() {
+		@SuppressWarnings("unchecked") Predicate<Integer> predicate = anyOf(i -> i > 0);
+		assertTrue(predicate.test(1));
+		assertFalse(predicate.test(-1));
+	}
+
+	@Test
+	public void anyOf_multiple() {
+		@SuppressWarnings("unchecked") Predicate<Integer> predicate = anyOf(
+			i -> i < 0, i -> i > 10);
+		assertTrue(predicate.test(-1));
+		assertTrue(predicate.test(11));
+		assertFalse(predicate.test(1));
+	}
+
+	@Test
+	public void anyOf_singleWithLeadingNull() {
+		@SuppressWarnings("unchecked") Predicate<Integer> predicate = anyOf(
+			null, i -> i > 0);
+		assertTrue(predicate.test(1));
+		assertFalse(predicate.test(-1));
+	}
+
+	@Test
+	public void anyOf_singleWithTrailingNull() {
+		@SuppressWarnings("unchecked") Predicate<Integer> predicate = anyOf(
+			i -> i > 0, null);
+		assertTrue(predicate.test(1));
+		assertFalse(predicate.test(-1));
+	}
+
+	@Test
+	public void anyOf_multipleWithLeadingNull() {
+		@SuppressWarnings("unchecked") Predicate<Integer> predicate = anyOf(
+			null, i -> i < 0, i -> i > 10);
+		assertTrue(predicate.test(-1));
+		assertTrue(predicate.test(11));
+		assertFalse(predicate.test(1));
+	}
+
+	@Test
+	public void anyOf_multipleWithTrailingNull() {
+		@SuppressWarnings("unchecked") Predicate<Integer> predicate = anyOf(
+				i -> i < 0, i -> i > 10, null);
+		assertTrue(predicate.test(-1));
+		assertTrue(predicate.test(11));
+		assertFalse(predicate.test(1));
+	}
+
+	@Test
+	public void anyOf_multipleWithNullsInMiddle() {
+		@SuppressWarnings("unchecked") Predicate<Integer> predicate = anyOf(
+			i -> i < 0, null, i -> i > 30, null, null, i -> 10 < i && i < 20);
+		assertFalse(predicate.test(1));
+		assertTrue(predicate.test(-1));
+		assertTrue(predicate.test(31));
+		assertTrue(predicate.test(15));
 		assertFalse(predicate.test(20));
 	}
 }
