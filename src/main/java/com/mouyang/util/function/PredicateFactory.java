@@ -4,7 +4,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
-import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
 
 public class PredicateFactory {
@@ -20,7 +20,7 @@ public class PredicateFactory {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Predicate<T> allOf(Predicate<T>... predicates) {
-		return composite((t, u) -> t.and(u), predicates);
+		return accumulate((t, u) -> t.and(u), predicates);
 	}
 
 	/**
@@ -31,11 +31,11 @@ public class PredicateFactory {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Predicate<T> anyOf(Predicate<T>... predicates) {
-		return composite((t, u) -> t.or(u), predicates);
+		return accumulate((t, u) -> t.or(u), predicates);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static <T> Predicate<T> composite(BiFunction<Predicate<T>, Predicate<T>, Predicate<T>> biFunction, Predicate<T>... predicates) {
+	private static <T> Predicate<T> accumulate(BinaryOperator<Predicate<T>> binaryOperation, Predicate<T>... predicates) {
 		List<Predicate<T>> nonNullPredicates;
 		if (0 == predicates.length 
 				|| (nonNullPredicates = asList(predicates).stream().filter(p -> p != null).collect(toList())).isEmpty()) {
@@ -43,7 +43,7 @@ public class PredicateFactory {
 		}
 		Predicate<T> composite = nonNullPredicates.get(0);
 		for (int index = 1; index < nonNullPredicates.size(); index++) {
-			composite = biFunction.apply(composite, nonNullPredicates.get(index)); 
+			composite = binaryOperation.apply(composite, nonNullPredicates.get(index)); 
 		}
 		return composite;
 	}
