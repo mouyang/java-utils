@@ -1,5 +1,8 @@
 package com.mouyang.util.perl;
 
+import static com.mouyang.util.VarArgs.nullSafe;
+
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -54,12 +57,13 @@ public class DoUnlessExpr {
 	}
 
 	public void unless(BooleanSupplier... booleanSuppliers) {
-		if (null == booleanSuppliers || 0 == booleanSuppliers.length) {
+		List<BooleanSupplier> nullSafeSuppliers;
+		if (null == booleanSuppliers || (nullSafeSuppliers = nullSafe(booleanSuppliers)).isEmpty()) {
 			runnable.run();
 			return;
 		}
-		for (BooleanSupplier booleanSupplier : booleanSuppliers) {
-			if (booleanSupplier.getAsBoolean()) {
+		for (BooleanSupplier nullSafeSupplier : nullSafeSuppliers) {
+			if (nullSafeSupplier.getAsBoolean()) {
 				return;
 			}
 		}

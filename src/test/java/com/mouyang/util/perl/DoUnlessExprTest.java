@@ -16,7 +16,7 @@ public class DoUnlessExprTest {
 	}
 
 	@Test
-	public void nullArguments() {
+	public void nullInput() {
 		final TestMock testMock = mock(TestMock.class);
 		_do(() -> {
 			testMock.run();
@@ -67,5 +67,22 @@ public class DoUnlessExprTest {
 			, () -> true
 		);
 		verify(testMock, never()).run();
+	}
+
+	@Test
+	public void multipleNulls() {
+		final TestMock testMock = mock(TestMock.class);
+		_do(() -> {
+			testMock.run();
+		}).unless(
+			() -> false
+			, null
+			, () -> false
+			, null
+			, () -> false
+			, null
+			, () -> false
+		);
+		verify(testMock).run();
 	}
 }

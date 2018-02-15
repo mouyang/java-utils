@@ -1,11 +1,14 @@
 package com.mouyang.util.function;
 
+import static com.mouyang.util.VarArgs.nullSafe;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
+
+import com.mouyang.util.VarArgs;
 
 public class PredicateFactory {
 	
@@ -37,8 +40,7 @@ public class PredicateFactory {
 	@SuppressWarnings("unchecked")
 	private static <T> Predicate<T> accumulate(BinaryOperator<Predicate<T>> binaryOperation, Predicate<T>... predicates) {
 		List<Predicate<T>> nonNullPredicates;
-		if (0 == predicates.length 
-				|| (nonNullPredicates = asList(predicates).stream().filter(p -> p != null).collect(toList())).isEmpty()) {
+		if (null == predicates || (nonNullPredicates = nullSafe(predicates)).isEmpty()) {
 			return alwaysTrue;
 		}
 		Predicate<T> composite = nonNullPredicates.get(0);
