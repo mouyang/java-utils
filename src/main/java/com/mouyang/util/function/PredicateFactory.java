@@ -39,8 +39,8 @@ public class PredicateFactory {
 	
 	@SuppressWarnings("unchecked")
 	private static <T> Predicate<T> accumulate(BinaryOperator<Predicate<T>> binaryOperation, Predicate<T>... predicates) {
-		List<Predicate<T>> nonNullPredicates;
-		if (null == predicates || (nonNullPredicates = nullSafe(predicates)).isEmpty()) {
+		List<Predicate<T>> nonNullPredicates = nullSafe(predicates);
+		if (nonNullPredicates.isEmpty()) {
 			return alwaysTrue;
 		}
 		Predicate<T> composite = nonNullPredicates.get(0);

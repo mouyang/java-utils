@@ -57,13 +57,8 @@ public class DoUnlessExpr {
 	}
 
 	public void unless(BooleanSupplier... booleanSuppliers) {
-		List<BooleanSupplier> nullSafeSuppliers;
-		if (null == booleanSuppliers || (nullSafeSuppliers = nullSafe(booleanSuppliers)).isEmpty()) {
-			runnable.run();
-			return;
-		}
-		for (BooleanSupplier nullSafeSupplier : nullSafeSuppliers) {
-			if (nullSafeSupplier.getAsBoolean()) {
+		for (BooleanSupplier booleanSupplier : nullSafe(booleanSuppliers)) {
+			if (booleanSupplier.getAsBoolean()) {
 				return;
 			}
 		}
