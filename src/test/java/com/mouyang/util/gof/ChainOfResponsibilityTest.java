@@ -27,6 +27,19 @@ public class ChainOfResponsibilityTest {
 	}
 	
 	@Test
+	public void precondition() {
+		ChainOfResponsibility<Integer> chain = new ChainOfResponsibility<>();
+		chain.add(() -> false, () -> 1);
+		chain.add(() -> true, () -> 2);
+		chain.add(() -> false, () -> 3);
+		chain.add(() -> true, () -> 4);
+		final int findFirst = chain.findFirst().get();
+		assertEquals(2, findFirst);
+		final List<Integer> findAll = chain.findAll();
+		assertThat(findAll, containsInAnyOrder(Arrays.asList(2, 4).toArray()));
+	}
+	
+	@Test
 	public void nonDefaultTerminatingCondition() {
 		ChainOfResponsibility<Integer> chain = new ChainOfResponsibility<>(x -> x >= 3);
 		chain.add(() -> 1);
@@ -55,17 +68,6 @@ public class ChainOfResponsibilityTest {
 		chain.add(() -> 2);
 		chain.findAll();
 		chain.add(() -> 3);
-	}
-	
-	@Test
-	public void addAfter_get() {
-		ChainOfResponsibility<Integer> chain = new ChainOfResponsibility<>(x -> x >= 3);
-		chain.add(() -> 1);
-		chain.add(() -> 2);
-		chain.get();
-		chain.add(() -> 3);
-		final int findFirst = chain.findFirst().get();
-		assertEquals(3, findFirst);
 	}
 	
 	@Test
