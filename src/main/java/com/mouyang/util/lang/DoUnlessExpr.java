@@ -1,8 +1,7 @@
-package com.mouyang.util.perl;
+package com.mouyang.util.lang;
 
 import static com.mouyang.util.VarArgs.nullSafe;
 
-import java.util.List;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -40,7 +39,7 @@ import java.util.function.BooleanSupplier;
  *     , condition2
  * ); 
  * </pre></blockquote>
- *  
+ * 
  * @author Matthew
  *
  */
