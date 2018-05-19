@@ -43,16 +43,16 @@ import java.util.function.BooleanSupplier;
  * @author Matthew
  *
  */
-public class DoUnlessExpr {
+public class DoUnlessExpression {
 
 	private final Runnable runnable;
 
-	private DoUnlessExpr(Runnable runnable) {
+	private DoUnlessExpression(Runnable runnable) {
 		this.runnable = runnable;
 	}
 
-	public static DoUnlessExpr _do(Runnable runnable) {
-		return new DoUnlessExpr(runnable);
+	public static DoUnlessExpression _do(Runnable runnable) {
+		return new DoUnlessExpression(runnable);
 	}
 
 	public void unless(BooleanSupplier... booleanSuppliers) {

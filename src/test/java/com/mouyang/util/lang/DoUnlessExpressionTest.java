@@ -1,6 +1,6 @@
 package com.mouyang.util.lang;
 
-import static com.mouyang.util.lang.DoUnlessExpr._do;
+import static com.mouyang.util.lang.DoUnlessExpression._do;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -9,7 +9,7 @@ import java.util.function.BooleanSupplier;
 
 import org.testng.annotations.Test;
 
-public class DoUnlessExprTest {
+public class DoUnlessExpressionTest {
 
 	private interface TestMock {
 		public void run();
