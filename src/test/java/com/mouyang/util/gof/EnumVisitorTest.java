@@ -31,15 +31,15 @@ public class EnumVisitorTest {
 	@Test(dataProvider = "supportedClasses")
 	public void noExceptions(Class<?> _class) {
 		AbstractEnumVisitorBuilderFactory.newInstance(TestEnum.class, _class)
-			.addHandler(TestEnum.A, null)
-			.addHandler(TestEnum.B, null)
+			.addHandler(null, TestEnum.A)
+			.addHandler(null, TestEnum.B)
 			.build();
 	}
 	
 	@Test(dataProvider = "supportedClasses")
 	public void exceptions(Class<?> _class) {
 		AbstractEnumVisitorBuilderFactory.newInstance(TestEnum.class, _class, new TestEnum[] {TestEnum.A})
-			.addHandler(TestEnum.B, null)
+			.addHandler(null, TestEnum.B)
 			.build();
 	}
 	
@@ -52,7 +52,7 @@ public class EnumVisitorTest {
 	@Test(dataProvider = "supportedClasses", expectedExceptions = IllegalArgumentException.class)
 	public void addHandlerForExceptionValue(Class<?> _class) {
 		AbstractEnumVisitorBuilderFactory.newInstance(TestEnum.class, _class, new TestEnum[] {TestEnum.A})
-			.addHandler(TestEnum.A, null);
+			.addHandler(null, TestEnum.A);
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)

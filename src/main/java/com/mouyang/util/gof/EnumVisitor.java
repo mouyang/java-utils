@@ -58,62 +58,62 @@ public class EnumVisitor<E extends Enum<E>, H> {
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public static <E extends Enum<E>, H> EnumVisitorBuilder<E, H> newInstance(Class<E> enumClass, Class<H> handlerClass, E[] exceptions) {
 			if (Runnable.class.isAssignableFrom(handlerClass)) {
-				return new RunnableEnumVisitorBuilder(exceptions, enumClass);
+				return new RunnableEnumVisitorBuilder(enumClass, exceptions);
 			} else if (Consumer.class.isAssignableFrom(handlerClass)) {
-				return new ConsumerEnumVisitorBuilder(exceptions, enumClass);
+				return new ConsumerEnumVisitorBuilder(enumClass, exceptions);
 			} else if (Supplier.class.isAssignableFrom(handlerClass)) {
-				return new SupplierEnumVisitorBuilder(exceptions, enumClass);
+				return new SupplierEnumVisitorBuilder(enumClass, exceptions);
 			} else if (Function.class.isAssignableFrom(handlerClass)) {
-				return new FunctionEnumVisitorBuilder(exceptions, enumClass);
+				return new FunctionEnumVisitorBuilder(enumClass, exceptions);
 			} else if (BiFunction.class.isAssignableFrom(handlerClass)) {
-				return new BiFunctionEnumVisitorBuilder(exceptions, enumClass);
+				return new BiFunctionEnumVisitorBuilder(enumClass, exceptions);
 			} else if (Predicate.class.isAssignableFrom(handlerClass)) {
-				return new PredicateEnumVisitorBuilder(exceptions, enumClass);
+				return new PredicateEnumVisitorBuilder(enumClass, exceptions);
 			} else if (BiPredicate.class.isAssignableFrom(handlerClass)) {
-				return new BiPredicateEnumVisitorBuilder(exceptions, enumClass);
+				return new BiPredicateEnumVisitorBuilder(enumClass, exceptions);
 			}
 			throw new IllegalArgumentException("unsupported handlerClass");
 		}
 		
 		private static class RunnableEnumVisitorBuilder<E extends Enum<E>> extends EnumVisitorBuilder<E, Runnable> {
-			public RunnableEnumVisitorBuilder(E[] exceptions, Class<E> enumClass) {
-				super(exceptions, enumClass);
+			public RunnableEnumVisitorBuilder(Class<E> enumClass, E[] exceptions) {
+				super(enumClass, exceptions);
 			}
 		}
 		
 		private static class ConsumerEnumVisitorBuilder<E extends Enum<E>> extends EnumVisitorBuilder<E, Consumer<?>> {
-			public ConsumerEnumVisitorBuilder(E[] exceptions, Class<E> enumClass) {
-				super(exceptions, enumClass);
+			public ConsumerEnumVisitorBuilder(Class<E> enumClass, E[] exceptions) {
+				super(enumClass, exceptions);
 			}
 		}
 		
 		private static class SupplierEnumVisitorBuilder<E extends Enum<E>> extends EnumVisitorBuilder<E, Supplier<?>> {
-			public SupplierEnumVisitorBuilder(E[] exceptions, Class<E> enumClass) {
-				super(exceptions, enumClass);
+			public SupplierEnumVisitorBuilder(Class<E> enumClass, E[] exceptions) {
+				super(enumClass, exceptions);
 			}
 		}
 		
 		private static class FunctionEnumVisitorBuilder<E extends Enum<E>> extends EnumVisitorBuilder<E, Function<?, ?>> {
-			public FunctionEnumVisitorBuilder(E[] exceptions, Class<E> enumClass) {
-				super(exceptions, enumClass);
+			public FunctionEnumVisitorBuilder(Class<E> enumClass, E[] exceptions) {
+				super(enumClass, exceptions);
 			}
 		}
 		
 		private static class BiFunctionEnumVisitorBuilder<E extends Enum<E>> extends EnumVisitorBuilder<E, BiFunction<?, ?, ?>> {
-			public BiFunctionEnumVisitorBuilder(E[] exceptions, Class<E> enumClass) {
-				super(exceptions, enumClass);
+			public BiFunctionEnumVisitorBuilder(Class<E> enumClass, E[] exceptions) {
+				super(enumClass, exceptions);
 			}
 		}
 		
 		private static class PredicateEnumVisitorBuilder<E extends Enum<E>> extends EnumVisitorBuilder<E, Predicate<?>> {
-			public PredicateEnumVisitorBuilder(E[] exceptions, Class<E> enumClass) {
-				super(exceptions, enumClass);
+			public PredicateEnumVisitorBuilder(Class<E> enumClass, E[] exceptions) {
+				super(enumClass, exceptions);
 			}
 		}
 		
 		private static class BiPredicateEnumVisitorBuilder<E extends Enum<E>> extends EnumVisitorBuilder<E, BiPredicate<?, ?>> {
-			public BiPredicateEnumVisitorBuilder(E[] exceptions, Class<E> enumClass) {
-				super(exceptions, enumClass);
+			public BiPredicateEnumVisitorBuilder(Class<E> enumClass, E[] exceptions) {
+				super(enumClass, exceptions);
 			}
 		}
 	}
@@ -131,17 +131,17 @@ public class EnumVisitor<E extends Enum<E>, H> {
 		private Map<E, H> handlers = new HashMap<>();
 		private EnumSet<E> allowableValues;
 		
-		public EnumVisitorBuilder(E[] exceptions, Class<E> enumClass) {
-			this(nullSafe(exceptions), enumClass);
+		public EnumVisitorBuilder(Class<E> enumClass, E[] exceptions) {
+			this(enumClass, nullSafe(exceptions));
 		}
 		
-		private EnumVisitorBuilder(Collection<E> exceptions, Class<E> enumClass) {
+		private EnumVisitorBuilder(Class<E> enumClass, Collection<E> exceptions) {
 			this.allowableValues = (null == exceptions || exceptions.isEmpty()) 
 				? copyOf(asList(enumClass.getEnumConstants()))
 				: complementOf(copyOf(exceptions));
 		}
 		
-		public EnumVisitorBuilder<E, H> addHandler(E e, H h) {
+		public EnumVisitorBuilder<E, H> addHandler(H h, E e) {
 			if (!allowableValues.contains(e)) {
 				throw new IllegalArgumentException(format("cannot add a handler for exception value '%s'", e));
 			}
